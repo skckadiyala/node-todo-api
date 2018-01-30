@@ -1,3 +1,5 @@
+require('./config/config');
+
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -86,7 +88,7 @@ app.delete('/todo/:id', (req,res) => {
 });
 
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
     console.log('Started on port 3000');
 });
 
