@@ -16,3 +16,13 @@ if  (!ObjectID.isValid(id)){
         console.log("User by Id:", todos);
     }).catch((e) => console.log(e));
 }
+
+// Todo.remove({}).then((result) =>{
+//   console.log(result);
+// });
+
+//Todo.findOneAndRemove({id})
+
+Todo.findByIdAndRemove('5a6ff0ed7572e92ff14a1159').then((todo)=>{
+    console.log(todo);
+})
