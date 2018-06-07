@@ -1,5 +1,9 @@
 require('./config/config');
 
+var argv = require('minimist')(process.argv.slice(2));
+var swagger = require("swagger-node-express");
+// var bodyParser = require( 'body-parser' );
+
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -9,11 +13,45 @@ var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/users');
 var {authenticate} = require('./middleware/authenticate');
-
+var path = require('path');
 var app = express();
 const port = process.env.PORT;
+var subpath = express();
+
+app.use(express.static('dist'));
+app.use(bodyParser());
+app.use("/v1", subpath);
+swagger.setAppHandler(subpath);
 
 app.use(bodyParser.json());
+
+
+swagger.setApiInfo({
+    title: "Todo API",
+    description: "API to do ToDo, manage Todos...",
+    termsOfServiceUrl: "",
+    contact: "suman@axway.com",
+    license: "",
+    licenseUrl: ""
+});
+
+
+subpath.get('/', function (req, res) {
+    // console.log('../../dist/index.html');
+    
+    res.sendfile(path.resolve ('dist/index.html'));
+});
+
+swagger.configureSwaggerPaths('', 'api-docs', '');
+
+var domain = 'localhost';
+
+if(argv.domain !== undefined)
+    domain = argv.domain;
+else
+    console.log('No --domain=xxx specified, taking default hostname "localhost".');
+var applicationUrl = 'http://' + domain;
+swagger.configure(applicationUrl, '1.0.0');
 
 app.post('/todos', (req, res) => {
     var todo = new Todo({
@@ -26,6 +64,8 @@ app.post('/todos', (req, res) => {
         res.status(400).send(e);
     });
 });
+
+
 
 app.get('/todos', (req, res) => {
     Todo.find().then((todos) => {
@@ -105,7 +145,7 @@ app.post('/users', (req, res) => {
     user.save().then(() => {
         return user.generateAuthToken();
     }).then((token) => {
-        console.log(user.password);
+       // console.log(user.password);
 
         res.header('x-auth', token).send(user);
     }).catch((e) => {

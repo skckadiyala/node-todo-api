@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  labels:
+    name: todos
+  name: todo-app
+spec:
+  replicas: 2
+  selector:
+    name: todos
+  template:
+    metadata:
+      labels:
+        name: todos
+    spec:
+      containers:
+      - image: skckadiyala/node-todo:1.1
+        name: todos
+        command: ['/bin/sh', '/opt/todo-app/start.sh']
+        ports:
+        - containerPort: 3000
+          name: http-server
