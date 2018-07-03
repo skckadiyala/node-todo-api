@@ -7,7 +7,8 @@ if [[ $ret -eq 0 ]]; then
     # The CNAME you want to update e.g. abc.example.com
     RECORDSET_APP="apictestapp.apicsystest.axwaytest.net."
     # Extracting the ELB records from service name for both nginx-admin and nginx-consumer service.
-    APP_ELB="$(kubectl get svc todo-service --no-headers -owide | awk '{print $4}')"
+    APP_ELB="$(kubectl get svc todo-service -n apic-systest-app --no-headers -owide | awk '{print $4}')"
+    ZONEID=Z1YWA6KKX2YNYD
     
     export APP_ELB
     # The Time-To-Live of this recordset

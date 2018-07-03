@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: json-config
+  labels:
+    app: json-server
+data:
+  db.json: |
+    {
+      "todos": [
+        {
+          "id": "1",
+          "text": "automatedPost_1",
+          "completedAt": null,
+          "completed": false
+        }
+      ]
+    }
+  routes.json: |
+    {
+      "/api/*": "/$1"
+    }

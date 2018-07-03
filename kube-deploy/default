@@ -1,0 +1,11 @@
+server {
+	listen 3000 default_server;
+	location / {
+		 add_header Authorization Basic\ Ogo=;
+		 rewrite_log on;
+		 rewrite ^(.*)$ $1?u=&p= break;
+		 proxy_pass http://todo-service:3000;
+		 proxy_set_header Host todo-service;
+		 proxy_redirect off;
+    }
+}

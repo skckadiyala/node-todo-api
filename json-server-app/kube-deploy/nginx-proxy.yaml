@@ -1,0 +1,46 @@
+apiVersion: apps/v1beta2 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: nginx-proxy-js
+  labels:
+    nginix_mode: proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      nginix_mode: proxy
+  template:
+    metadata:
+      labels:
+        nginix_mode: proxy
+    spec:
+      containers:
+      - name: nginx-proxy-js
+        image: skckadiyala/nginx-influxdb:1.0.1
+        env:
+        - name: INFLUX_HOST
+          value: "json-server-app"
+        - name: INFLUX_URL
+          value: "http://json-server-app"
+        - name: INFLUX_USER
+          value: ""
+        - name: INFLUX_PASSWORD
+          value: ""
+        command: ["/bin/sh","-c"]
+        args: [". /templates/default.sh > /etc/nginx/sites-available/default; nginx"]
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-proxy-js
+  labels:
+    nginix_mode: proxy
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    nginix_mode: proxy
+  type: LoadBalancer

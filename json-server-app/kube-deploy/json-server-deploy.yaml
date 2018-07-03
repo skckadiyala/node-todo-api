@@ -1,0 +1,44 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: json-server-app
+  labels:
+    app: json-server-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: json-server-app
+  template:
+    metadata:
+      labels:
+        app: json-server-app
+    spec:
+      containers:
+        - image: clue/json-server
+          name: json-server
+          volumeMounts:
+          - name: json-config
+            mountPath: /data
+          ports:
+            - containerPort: 3000
+              name: json-server
+      volumes:
+      - name: json-config
+        configMap:
+          name: json-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: json-server-app
+  labels:
+    app: json-server-app
+spec:
+  ports:
+    - port: 80
+      name: http
+      targetPort: 80
+  selector:
+    app: json-server-app
+  # type: LoadBalancer

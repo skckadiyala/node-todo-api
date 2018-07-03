@@ -1,0 +1,11 @@
+server {
+	listen 80 default_server;
+	location / {
+		 add_header Authorization Basic\ Ogo=;
+		 rewrite_log on;
+		 rewrite ^(.*)$ $1?u=&p= break;
+		 proxy_pass http://json-server-app;
+		 proxy_set_header Host json-server-app;
+		 proxy_redirect off;
+    }
+}

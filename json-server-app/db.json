@@ -1,0 +1,10 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "first_name": "automation",
+      "last_name": "user",
+      "email": "automationuser@fake.com"
+    }
+  ]
+}
