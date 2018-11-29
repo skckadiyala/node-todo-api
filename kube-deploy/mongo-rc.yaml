@@ -1,12 +1,15 @@
-apiVersion: v1
-kind: ReplicationController
+apiVersion: apps/v1beta2
+kind: Deployment
 metadata:
   labels:
     name: mongo
   name: mongo-controller
-  namespace: apic-systest-app  
+  namespace: todo-app 
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: mongo
   template:
     metadata:
       labels:
@@ -20,10 +23,16 @@ spec:
           containerPort: 27017
           hostPort: 27017
         volumeMounts:
-            - name: mongo-persistent-storage
+            - name: mongodata
               mountPath: /data/db
       volumes:
-        - name: mongo-persistent-storage
-          awsElasticBlockStore:
-            volumeID: aws://us-west-2a/vol-070d3ad56742207c0
-            fsType: ext4
+        - name: mongodata
+          persistentVolumeClaim:
+            claimName: mongodata
+      nodeSelector:
+        backend-only: "true"
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "backend"
+        effect: "NoSchedule"

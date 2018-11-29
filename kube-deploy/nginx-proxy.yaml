@@ -4,6 +4,7 @@ metadata:
   name: nginx-proxy
   labels:
     nginix_mode: proxy
+  namespace: todo-app
 spec:
   replicas: 1
   selector:
@@ -30,6 +31,14 @@ spec:
         args: [". /templates/default.sh > /etc/nginx/sites-available/default; nginx"]
         ports:
         - containerPort: 3000
+      nodeSelector:
+        backend-only: "true"
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "backend"
+        effect: "NoSchedule"
+        
 ---
 apiVersion: v1
 kind: Service
@@ -37,6 +46,7 @@ metadata:
   name: nginx-influxdb
   labels:
     nginix_mode: proxy
+  namespace: todo-app 
 spec:
   ports:
     - port: 80

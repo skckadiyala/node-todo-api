@@ -4,7 +4,7 @@ metadata:
   labels:
     name: mongo
   name: mongo-service
-  namespace: apic-systest-app  
+  namespace: todo-app 
 spec:
   ports:
     - port: 27017

@@ -4,7 +4,7 @@ metadata:
   name: todo-service
   labels:
     name: todos
-  namespace: apic-systest-app  
+  namespace: todo-app
 spec:
   # type: LoadBalancer
   ports:
